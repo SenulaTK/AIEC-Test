@@ -1,0 +1,40 @@
+# AIEC — AI Exam Creator: deep navy / indigo / violet theme
+
+[theme]
+font = "sans serif"
+baseRadius = "medium"
+showSidebarBorder = true
+
+# Light mode
+[theme.light]
+primaryColor = "#6366F1"
+backgroundColor = "#F5F7FF"
+secondaryBackgroundColor = "#E8ECFA"
+textColor = "#18233A"
+linkColor = "#4F46E5"
+borderColor = "#B8C4E3"
+
+[theme.light.sidebar]
+backgroundColor = "#E8ECFA"
+secondaryBackgroundColor = "#DDE4F5"
+textColor = "#18233A"
+primaryColor = "#6366F1"
+linkColor = "#7C3AED"
+borderColor = "#A5B4D4"
+
+# Dark mode — screenshot palette
+[theme.dark]
+primaryColor = "#7C5CFF"
+backgroundColor = "#0B1B2A"
+secondaryBackgroundColor = "#17263A"
+textColor = "#F5F7FF"
+linkColor = "#A78BFA"
+borderColor = "#294B73"
+
+[theme.dark.sidebar]
+backgroundColor = "#0B1B2A"
+secondaryBackgroundColor = "#17263A"
+textColor = "#F5F7FF"
+primaryColor = "#8B5CF6"
+linkColor = "#C4B5FD"
+borderColor = "#294B73"
