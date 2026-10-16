@@ -118,10 +118,10 @@ def generate_with_gemini_fallback(client: genai.Client, target_model: str, conte
     raise last_err if last_err else RuntimeError("Failed to generate content with available Gemini models.")
 
 def render_tts_button(text_to_speak: str, button_key: str):
-    clean_speech = text_to_speak.replace('"', '\\"').replace("'", "\\'").replace('\n', ' ')
+    clean_speech = text_to_speak.replace('\\', '\\\\').replace('"', '\\"').replace("'", "\\'").replace('\n', ' ')
     tts_html = f"""
-    <div style="margin: 4px 0 8px 0;">
-        <button onclick="speakText_{button_key}()" style="
+    <style>
+        .tts-btn-{button_key} {{
             background: #e0e7ff;
             border: 1px solid #c7d2fe;
             border-radius: 6px;
@@ -133,16 +133,47 @@ def render_tts_button(text_to_speak: str, button_key: str):
             gap: 6px;
             color: #3730a3;
             font-weight: 600;
-        ">
-            🔊 Listen to Question (TTS)
+            transition: all 0.2s ease;
+        }}
+        .tts-btn-{button_key}:hover {{
+            background: #c7d2fe;
+        }}
+        .tts-btn-{button_key}:focus-visible {{
+            outline: 2px solid #4f46e5;
+            outline-offset: 2px;
+        }}
+    </style>
+    <div style="margin: 4px 0 8px 0;">
+        <button type="button" id="tts_btn_{button_key}" class="tts-btn-{button_key}" aria-label="Listen to question using text to speech" onclick="speakText_{button_key}()">
+            <span id="tts_icon_{button_key}" aria-hidden="true">🔊</span>
+            <span id="tts_text_{button_key}">Listen to Question (TTS)</span>
         </button>
     </div>
     <script>
         function speakText_{button_key}() {{
             if ('speechSynthesis' in window) {{
                 window.speechSynthesis.cancel();
+                var btn = document.getElementById("tts_btn_{button_key}");
+                var icon = document.getElementById("tts_icon_{button_key}");
+                var text = document.getElementById("tts_text_{button_key}");
+
                 var utterance = new SpeechSynthesisUtterance("{clean_speech}");
                 utterance.rate = 0.95;
+
+                function resetBtn() {{
+                    if (icon) icon.textContent = "🔊";
+                    if (text) text.textContent = "Listen to Question (TTS)";
+                    if (btn) btn.style.opacity = "1";
+                }}
+
+                utterance.onstart = function() {{
+                    if (icon) icon.textContent = "🔊";
+                    if (text) text.textContent = "Speaking...";
+                    if (btn) btn.style.opacity = "0.8";
+                }};
+                utterance.onend = resetBtn;
+                utterance.onerror = resetBtn;
+
                 window.speechSynthesis.speak(utterance);
             }} else {{
                 alert("Text-to-speech is not supported in this browser.");
